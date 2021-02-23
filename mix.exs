@@ -19,6 +19,9 @@ defmodule ProjectB.MixProject do
   end
 
   defp deps do
-    []
+    [
+      {:plug_cowboy, "~> 2.4"},
+      {:jason, "~> 1.2"}
+    ]
   end
 end
