@@ -1,0 +1,2 @@
+defmodule ProjectB do
+end
