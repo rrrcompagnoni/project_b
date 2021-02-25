@@ -36,7 +36,7 @@ defmodule ProjectB do
       {:plus_signal_validation, true} ->
         BuildPhoneFailure.new(reason: @space_after_plus_siginal_message)
 
-      {:prefix_match, :prefix_not_found} ->
+      {:prefix_match, nil} ->
         BuildPhoneFailure.new(reason: @prefix_missing_message)
 
       {:number_length_validation, false} ->
@@ -59,14 +59,18 @@ defmodule ProjectB do
   end
 
   defp get_prefix(raw_number, prefixes) do
-    with {prefix_start_position, prefix_end_position} <-
-           :binary.match(raw_number, prefixes),
-         prefix when is_binary(prefix) <-
-           :binary.part(raw_number, {prefix_start_position, prefix_end_position}) do
-      prefix
-    else
-      :nomatch -> :prefix_not_found
-    end
+    number = String.replace(raw_number, ~r/^\+||00/, "")
+
+    Enum.find(prefixes, fn prefix ->
+      number_size = byte_size(number)
+      prefix_size = byte_size(prefix)
+
+      if prefix_size <= number_size do
+        prefix == binary_part(number, 0, prefix_size)
+      else
+        false
+      end
+    end)
   end
 
   defp get_number(raw_number, prefix) do
