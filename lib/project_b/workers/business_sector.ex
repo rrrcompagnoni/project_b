@@ -10,20 +10,25 @@ defmodule ProjectB.Workers.BusinessSector do
              is_function(business_sector_fetcher) do
     Enum.map(raw_phones, fn raw_phone ->
       Task.Supervisor.async(ProjectB.TaskSupervisor, fn ->
-        case phone_builder.(raw_phone) do
-          %Phone{} = phone ->
-            sector =
-              phone
-              |> business_sector_fetcher.()
-              |> Map.fetch!(:sector)
-
-            ProjectB.set_phone_sector(phone, sector)
-
-          %BuildPhoneFailure{} = failure ->
-            failure
-        end
+        maybe_build_and_set_sector(raw_phone, phone_builder, business_sector_fetcher)
       end)
     end)
     |> Task.await_many()
+  end
+
+  defp maybe_build_and_set_sector(raw_phone, phone_builder, business_sector_fetcher) do
+    case phone_builder.(raw_phone) do
+      %Phone{} = phone ->
+        ProjectB.set_phone_sector(phone, fetch_sector(phone, business_sector_fetcher))
+
+      %BuildPhoneFailure{} = failure ->
+        failure
+    end
+  end
+
+  defp fetch_sector(phone, business_sector_fetcher) do
+    phone
+    |> business_sector_fetcher.()
+    |> Map.fetch!(:sector)
   end
 end
