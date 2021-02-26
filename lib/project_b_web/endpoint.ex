@@ -12,7 +12,7 @@ defmodule ProjectBWeb.Endpoint do
 
   plug(:dispatch)
 
-  @business_sector_api Application.fetch_env!(:project_b, :business_sector_api)
+  @business_sector_api Application.compile_env(:project_b, :business_sector_api)
 
   get "/ping" do
     conn
