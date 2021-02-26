@@ -22,7 +22,8 @@ defmodule ProjectB.MixProject do
     [
       {:plug_cowboy, "~> 2.4"},
       {:jason, "~> 1.2"},
-      {:finch, "~> 0.6.3"}
+      {:finch, "~> 0.6.3"},
+      {:credo, "~> 1.5"}
     ]
   end
 end
