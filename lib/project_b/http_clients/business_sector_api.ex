@@ -6,14 +6,14 @@ defmodule ProjectB.HTTPClients.BusinessSectorAPI do
 
   @behaviour BusinessSectorAPIBehavior
 
+  @endpoint Application.compile_env!(:project_b, :business_sector_endpoint)
+
   @impl true
   @spec fetch(Phone.t()) :: %{number: String.t(), sector: String.t()}
   def fetch(%Phone{sector: nil} = phone) do
     Finch.build(
       :get,
-      URI.encode(
-        "https://challenge-business-sector-api.meza.talkdeskstg.com/sector/#{phone.raw_number}"
-      )
+      URI.encode("#{@endpoint}/#{phone.raw_number}")
     )
     |> Finch.request(ProjectB.Finch)
     |> case do

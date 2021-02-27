@@ -4,6 +4,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    env_file: 
+      - web-variables.env
     ports:
       - "8080:8080"
     command: mix run --no-halt

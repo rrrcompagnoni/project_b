@@ -27,3 +27,5 @@ project_b-*.tar
 /tmp
 
 /.elixir_ls
+
+web-variables.env
